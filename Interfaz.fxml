@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz">
+   <children>
+      <Pane prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <TextField fx:id="txtMTU" layoutX="293.0" layoutY="95.0" prefHeight="25.0" prefWidth="167.0" />
+            <TextField fx:id="txtLongitudDatagrama" layoutX="293.0" layoutY="135.0" prefHeight="25.0" prefWidth="167.0" />
+            <TextField fx:id="txtDireccionIPOrigen" layoutX="293.0" layoutY="221.0" prefHeight="25.0" prefWidth="167.0" />
+            <TextField fx:id="txtDireccionIPDestino" layoutX="293.0" layoutY="267.0" prefHeight="25.0" prefWidth="167.0" />
+            <RadioButton fx:id="btnRadioICMP" layoutX="296.0" layoutY="183.0" mnemonicParsing="false" text="ICMP" />
+            <RadioButton fx:id="btnRadioTCP" layoutX="356.0" layoutY="183.0" mnemonicParsing="false" text="TCP" />
+            <RadioButton fx:id="btnRadioUDP" layoutX="412.0" layoutY="183.0" mnemonicParsing="false" text="UDP" />
+            <Label layoutX="30.0" layoutY="85.0" prefHeight="44.0" prefWidth="263.0" text="Unidad máxima de transferencia de la red (MTU)" />
+            <Label layoutX="131.0" layoutY="139.0" text="Longitud total del datagrama" />
+            <Label layoutX="184.0" layoutY="225.0" text="Dirección IP Origen" />
+            <Label layoutX="177.0" layoutY="271.0" prefHeight="17.0" prefWidth="120.0" text="Dirección IP Destino" />
+            <Button fx:id="btnCalcular" layoutX="175.0" layoutY="328.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Calcular" />
+            <Label layoutX="104.0" layoutY="33.0" prefHeight="37.0" prefWidth="428.0" text="Construcción y Fragmentación de datagramas IPv4" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnAleatorio" layoutX="332.0" layoutY="328.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Aleatorio" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
