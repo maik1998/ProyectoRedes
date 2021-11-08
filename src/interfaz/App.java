@@ -16,7 +16,6 @@ public class App {
 		fragmentar = new Fragmentar();
 		operacion = new Operacion();
 		entradaDeDatos();
-		operacion.datos();
 	}
 
 	public static void entradaDeDatos() {
@@ -34,7 +33,7 @@ public class App {
 				Scanner entrada = new Scanner(System.in);
 				mtu = entrada.nextLine();
 				fragmentar.setMtu(mtu);
-				System.out.print(fragmentar.getMtu());
+				//System.out.print(fragmentar.getMtu());
 			}
 			if(i==1) {
 				pregunta = "Longitud total del datagrama: ";
@@ -67,6 +66,7 @@ public class App {
 			//System.out.print(cadena);
 			i++;
 		}
+		operacion.datos(mtu, tamDatagrama, protocolo, iporigen, ipdestino);
 	}
 
 }
