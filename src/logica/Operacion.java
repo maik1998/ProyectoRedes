@@ -277,4 +277,61 @@ public class Operacion {
 		}
 		return String.valueOf((int) res);		
 	}
+	
+public static int[] hallarDesplazamiento (String mtu, String longitudDatagrama) {
+		
+		double Mtu= Double.parseDouble(mtu);
+		double tamaño= Mtu-20;
+		double longitud= Double.parseDouble(longitudDatagrama);
+		int suma=0;
+		int numFragmentos= numeroFragmentos(Mtu,longitud);
+		
+		int [] desplazamiento= new int [numFragmentos];
+		desplazamiento[0]=0;
+		
+		for (int i=1; i<desplazamiento.length;i++) {
+			suma+=tamaño;
+			desplazamiento[i]= suma/8;
+		}
+		return desplazamiento;
+	}
+	
+   public static int numeroFragmentos (double mtu, double longitudDatagrama) {
+		
+		int fragmentos;
+		double n= longitudDatagrama/ mtu;
+		int nCasteado= (int) n;
+		
+		
+		if(n % nCasteado == 0) {
+			fragmentos=(int)n;
+		}
+		else {
+			fragmentos=((int)n) + 1;
+		}
+		return fragmentos;
+	}
+   
+   public static int [] longitudFragmentos (String mtu, String longitudDatagrama) {
+		
+	   double Mtu= Double.parseDouble(mtu);
+	   double longitudDatagram= Double.parseDouble(longitudDatagrama);
+	   double suma=0;
+	   double longitudEncabezado=20;
+	   double longitudDatos=0;
+		
+	   int numFragmentos= numeroFragmentos(Mtu,longitudDatagram);
+	   
+	   int [] longitud= new int [numFragmentos];
+	   
+	   for (int i=0; i<longitud.length-1;i++) {
+			longitud[i]= (int) Mtu;
+			longitudDatos=Mtu - longitudEncabezado;
+			suma+=longitudDatos;
+		}
+	   
+	   longitud[longitud.length-1]= (int) (((longitudDatagram - longitudEncabezado) - suma) + longitudEncabezado);
+	  
+		return longitud;
+	}
 }
