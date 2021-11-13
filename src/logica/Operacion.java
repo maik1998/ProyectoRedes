@@ -334,4 +334,36 @@ public static int[] hallarDesplazamiento (String mtu, String longitudDatagrama) 
 	  
 		return longitud;
 	}
+   
+   public static String[] hallarFlags (String mtu, String longitudDatagrama, int desplazamiento) {
+		
+		double Mtu= Double.parseDouble(mtu);
+		double longitud= Double.parseDouble(longitudDatagrama);
+		int numeroFragmentos=0;
+		int [] desplazamientos= hallarDesplazamiento(mtu,longitudDatagrama);
+		String [] flags= new String [3];
+		flags[0]= "0";
+		
+		if(longitud > Mtu) {
+			flags[1]= "0";
+			numeroFragmentos= numeroFragmentos (Mtu, longitud);
+			for(int i=0; i<desplazamientos.length;i++)
+			{
+				if(desplazamientos[i] == desplazamiento) {
+					if((i+1)==numeroFragmentos) {
+						flags[2]="0";
+					}
+					else {
+						flags[2]="1";
+					}
+				}
+			}
+		}
+		else {
+			flags[1]= "1";
+			flags[2]= "0";
+		}
+		
+		return flags;
+	}
 }
