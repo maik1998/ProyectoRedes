@@ -1,5 +1,6 @@
 package logica;
 
+// ESTE METODO SIRVE COMO ENTIDAD O MODELO PARA ESAS VARIABLES DE ENTRADA QUE EL USUARIO DIGITA POR MEDIO DE LA INTERFAZ.
 public class Fragmentar {
 	public String mtu = "";
 	public String tamDatagrama = "";

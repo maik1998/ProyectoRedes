@@ -13,9 +13,14 @@ import logica.Fragmentar;
 import logica.Operacion;
 
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import javax.swing.JTextArea;
 
 public class AppPrincipal {
 
@@ -27,9 +32,13 @@ public class AppPrincipal {
 	
 	public Fragmentar fragmentar = null;
 	public Operacion operacion = null;
+	private JTextArea tahexadecimal;
+	private JTextArea tabinario;
+	private JTextArea taentendible;
 
 	/**
 	 * Launch the application.
+	 * Aqui inicializa la aplicacion.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -46,6 +55,7 @@ public class AppPrincipal {
 
 	/**
 	 * Create the application.
+	 * AQUI SE TIENE EN CUENTA LA INSTANCIA CON LA CLASE Fragmentar Y Operacion.
 	 */
 	public AppPrincipal() {
 		fragmentar = new Fragmentar();
@@ -55,10 +65,11 @@ public class AppPrincipal {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * AQUI VA TODO LO RELACIONADO CON EL DISEÑO DE LA APLICACION
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 510, 323);
+		frame.setBounds(10, 10, 1300, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -122,9 +133,61 @@ public class AppPrincipal {
 		rbtcp.setBounds(276, 105, 63, 23);
 		frame.getContentPane().add(rbtcp);
 		
+		JSeparator separator = new JSeparator();
+		separator.setForeground(Color.BLACK);
+		separator.setOrientation(SwingConstants.VERTICAL);
+		separator.setBounds(444, 11, 10, 280);
+		frame.getContentPane().add(separator);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setForeground(Color.BLACK);
+		separator_1.setBounds(16, 289, 425, 14);
+		frame.getContentPane().add(separator_1);
+		
+		JLabel lblNewLabel_5 = new JLabel("Encabexado del Datagrama IP en Hexadecimal");
+		lblNewLabel_5.setBounds(604, 11, 295, 14);
+		frame.getContentPane().add(lblNewLabel_5);
+		
+		tahexadecimal = new JTextArea();
+		tahexadecimal.setBackground(new Color(255, 255, 255));
+		tahexadecimal.setFont(new Font("Monospaced", Font.PLAIN, 13));
+		tahexadecimal.setForeground(Color.BLACK);
+		tahexadecimal.setBounds(476, 31, 775, 116);
+		JScrollPane scrollPane = new JScrollPane(tahexadecimal);
+		scrollPane.setBounds(476, 31, 775, 116);
+		frame.getContentPane().add(scrollPane);
+		//frame.getContentPane().add(tahexadecimal);
+		
+		JLabel lblNewLabel_6 = new JLabel("Encabezado del Datagrama IP en Binario");
+		lblNewLabel_6.setBounds(600, 158, 295, 14);
+		frame.getContentPane().add(lblNewLabel_6);
+		
+		tabinario = new JTextArea();
+		tabinario.setBounds(476, 178, 775, 113);
+		JScrollPane scrollPane2 = new JScrollPane(tabinario);
+		scrollPane2.setBounds(476, 178, 775, 113);
+		frame.getContentPane().add(scrollPane2);
+		//frame.getContentPane().add(tabinario);
+		
+		JLabel lblNewLabel_7 = new JLabel("Encabezado del datagrama IP de manera Wireshark");
+		lblNewLabel_7.setBounds(109, 314, 383, 14);
+		frame.getContentPane().add(lblNewLabel_7);
+		
+		taentendible = new JTextArea();
+		taentendible.setBounds(16, 345, 590, 285);
+		JScrollPane scrollPane3 = new JScrollPane(taentendible);
+		scrollPane3.setBounds(16, 345, 590, 285);
+		frame.getContentPane().add(scrollPane3);
+		
 		JButton btcalcular = new JButton("Calcular");
 		btcalcular.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// TOMA LOS DATOS DE ENTRADA Y ENVIA AL METODO dato DE LA CLASE Operacion
+				// LUEGO ORGANIZA EL MENSAJE PARA IMPRIMIR EN TEXTAREA PARA HEXADECIMAL, BINARIO Y EN MODO ENTENDIBLE SIMILAR A WIRESHARK
+				
+				tahexadecimal.setText("");
+				tabinario.setText("");
+				taentendible.setText("");
 				
 				String mtu = "";
 				String tamDatagrama = "";
@@ -139,17 +202,14 @@ public class AppPrincipal {
 				if(rbicmp.isSelected() == true) {
 					protocolo = rbicmp.getText();
 					fragmentar.setProtocolo(protocolo);
-					//System.out.println("ICMP");
 				}
 				if(rbtcp.isSelected() == true) {
 					protocolo = rbtcp.getText();
 					fragmentar.setProtocolo(protocolo);
-					//System.out.println("TCP");
 				}
 				if(rbudp.isSelected() == true) {
 					protocolo = rbudp.getText();
 					fragmentar.setProtocolo(protocolo);
-					//System.out.println("UDP");
 				}
 				iporigen = tfiporigen.getText();
 				fragmentar.setIporigen(iporigen);
@@ -158,8 +218,55 @@ public class AppPrincipal {
 				
 				operacion.datos(mtu, tamDatagrama, protocolo, iporigen, ipdestino);
 				
+				String msjHexa = "";
+				String hexadecimal[] = operacion.datagramaipHexadecimal;
+				for(int i=0;i<hexadecimal.length;i++) {
+					msjHexa += "Datagrama IP #" + (i+1) + ": \n";
+					msjHexa += hexadecimal[i] + "\n\n";
+				}
+				tahexadecimal.setText(msjHexa);
+				
+				String msjBin = "";
+				String binario[] =  ordenarDatagramaIPBinario(operacion.datagramaipBinario);
+				int j = 0, k = 0;
+				for(int i=0;i<operacion.datagramaipBinario.length;i++) {
+					msjBin += "Datagrama IP #" + (i+1) + ": \n";
+					while(j<5) {
+						msjBin += binario[k] + "\n";
+						j++;
+						k++;
+					}
+					j = 0;
+					msjBin += "\n";
+				}
+				tabinario.setText(msjBin);
+				
 				String msj = operacion.imprime();
-				JOptionPane.showMessageDialog(null, msj);
+				taentendible.setText(msj);
+				//JOptionPane.showMessageDialog(null, msj);
+			}
+
+			public String[] ordenarDatagramaIPBinario(String[] datagramaipBinario) {
+				// Organizar el datagrama IP Binario en 32 bits por linea
+				String arregloBinario[] = new String[5 * datagramaipBinario.length];
+				int i = 0, j = 0, inicial = 0, end = 39;
+				String aux = "";
+				while(i < datagramaipBinario.length) {
+					int k = 0;
+					while(k < 5) {
+						aux = datagramaipBinario[i].substring(inicial, end);
+						arregloBinario[j] = aux;
+						inicial += 40;
+						end += 40;
+						j++;
+						k++;
+					}
+					inicial = 0;
+					end = 39;
+					i++;
+				}
+				
+				return arregloBinario;
 			}
 		});
 		btcalcular.setFont(new Font("Arial", Font.BOLD, 11));
@@ -167,24 +274,28 @@ public class AppPrincipal {
 		frame.getContentPane().add(btcalcular);
 		
 		JButton btaleatorio = new JButton("Aleatorio");
+		btaleatorio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// AQUI VA DONDE SE DEBE ORGANIZAR EL EJERCICIO DE FORMA QUE LAS ENTRADAS DE DATOS DEBEN SER ALEATORIOS
+				// Y ADEMAS SE DEBERA RESOLVER TAL CUAL COMO SE HIZO CON EL ANTERIOR.
+			}
+		});
 		btaleatorio.setFont(new Font("Arial", Font.BOLD, 11));
 		btaleatorio.setBounds(288, 234, 134, 23);
 		frame.getContentPane().add(btaleatorio);
+		
+		String integrantes = "Integrantes del proyecto: \n\n";
+		integrantes += "Juan David Moreno Cifuentes \n";
+		integrantes += "Anjully Tatiana Mora Acosta \n";
+		integrantes += "Jean Michael Mendoza \n";
+		integrantes += "Andres Felipe Rincon";
+		
+		JTextArea taintegrantes = new JTextArea(integrantes);
+		taintegrantes.setEditable(false);
+		taintegrantes.setForeground(Color.BLACK);
+		taintegrantes.setFont(new Font("Arial", Font.BOLD, 14));
+		taintegrantes.setEnabled(true);
+		taintegrantes.setBounds(774, 395, 233, 124);
+		frame.getContentPane().add(taintegrantes);
 	}
-	/*
-	public void mensaje(String mtu, String tamDatagrama, String protocolo, String ipOrigen, String ipDestino, int numIdentificacion, int tiempoVida, int versionDatagrama, int longitudEncabezado, int servicioDiferenciado) {
-		String texto = "Resultado Final:\n\n";
-		texto += "El MTU es: " + mtu + "\n";
-		texto += "Longitud total del datagrama es: " + tamDatagrama + "\n";
-		texto +="El protocolo es: " + protocolo + "\n";
-		texto += "Direccion IP Origen: " + ipOrigen + "\n";
-		texto += "Direccion IP Destino: " + ipDestino + "\n";
-		texto += "Numero de Identificacion: " + numIdentificacion + "\n";
-		texto += "Tiempo de Vida: " + tiempoVida + "\n";
-		texto += "Version del Datagrama: " + versionDatagrama + "\n";
-		texto += "Longitud del encabezado: " + longitudEncabezado + "\n";
-		texto += "Sevicios Diferenciados: " + servicioDiferenciado;
-		JOptionPane.showInputDialog(texto);
-	}
-	*/
 }
