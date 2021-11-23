@@ -52,7 +52,7 @@ public class Operacion {
 		
 		this.arrayDeFlags = new String[this.arregloDesplazamiento.length];
 		for (int i = 0; i < this.arregloDesplazamiento.length; i++) {
-			arrayDeFlags[i] = this.hallarFlags(mtu, tamDatagrama, this.arregloDesplazamiento[i]);
+			arrayDeFlags[i] = this.hallarFlags(mtu, tamDatagrama, this.arregloDesplazamiento[i]) + "0";//
 		}
 		
 		this.datagramaip = ordenarParaSuma(mtu, tamDatagrama, protocolo, ipOrigen, ipDestino, this.numIdentificacion,
@@ -597,21 +597,27 @@ public class Operacion {
 			textoW += "Header length: " + this.longitudEncabezado + " bytes" + "\n";
 			textoW += "Differentiated Services Field: 0x00" + "\n";
 			textoW += "Total Length: " + this.arregloLongitudcadaFragmento[i] + "\n";
-			textoW += "Identification: 0x0000 (0)" + "\n";
+			textoW += "Identification: 0x" + this.convertirDecimalToHexadecimal("" + this.numIdentificacion) + "  (" + this.numIdentificacion + ")" + "\n";
 			
-			if(this.arrayDeFlags[i].equals("010")) {
+			if(this.arrayDeFlags[i].equals("0100")) {
 				textoW += "Flags: 0x02 (Don´t Fragment)" + "\n";
 				textoW += "0.. = Reserved bit: Not Set" + "\n";
 				textoW += ".1. = Don´t fragment: Set" + "\n";
 				textoW += "..0 = More fragments: Not Set" + "\n";
 			}
-			if(this.arrayDeFlags[i].equals("001")) {
+			if(this.arrayDeFlags[i].equals("0010")) {
 				textoW += "Flags: 0x03 (More Fragment)" + "\n";
 				textoW += "0.. = Reserved bit: Not Set" + "\n";
 				textoW += ".0. = Don´t fragment: Not Set" + "\n";
 				textoW += "..1 = More fragments: Set" + "\n";
 			}
 			if(this.arrayDeFlags[i].equals("")) {
+				textoW += "Flags: 0x02 (Don´t Fragment)" + "\n";
+				textoW += "0.. = Reserved bit: Not Set" + "\n";
+				textoW += ".1. = Don´t fragment: Not Set" + "\n";
+				textoW += "..0 = More fragments: Not Set" + "\n";
+			}
+			if(this.arrayDeFlags[i].equals("0000")) {
 				textoW += "Flags: 0x02 (Don´t Fragment)" + "\n";
 				textoW += "0.. = Reserved bit: Not Set" + "\n";
 				textoW += ".1. = Don´t fragment: Not Set" + "\n";
