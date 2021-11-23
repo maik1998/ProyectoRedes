@@ -14,8 +14,10 @@ import logica.Operacion;
 
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
@@ -132,6 +134,15 @@ public class AppPrincipal {
 		rbtcp.setFont(new Font("Arial", Font.PLAIN, 11));
 		rbtcp.setBounds(276, 105, 63, 23);
 		frame.getContentPane().add(rbtcp);
+		
+		ButtonGroup grupo1 = new ButtonGroup();
+		grupo1.add(rbicmp);
+		grupo1.add(rbtcp);
+		grupo1.add(rbudp);
+		
+		rbicmp.setSelected(false);
+		rbtcp.setSelected(false);
+		rbudp.setSelected(false);
 		
 		JSeparator separator = new JSeparator();
 		separator.setForeground(Color.BLACK);
@@ -274,11 +285,117 @@ public class AppPrincipal {
 		frame.getContentPane().add(btcalcular);
 		
 		JButton btaleatorio = new JButton("Aleatorio");
+	
+		
 		btaleatorio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// AQUI VA DONDE SE DEBE ORGANIZAR EL EJERCICIO DE FORMA QUE LAS ENTRADAS DE DATOS DEBEN SER ALEATORIOS
-				// Y ADEMAS SE DEBERA RESOLVER TAL CUAL COMO SE HIZO CON EL ANTERIOR.
+	
+				tahexadecimal.setText("");
+				tabinario.setText("");
+				taentendible.setText("");
+				
+				//Variable Aleatorias
+				int mtu = (int) (Math.random() * (9181 - 576)) + 576;
+				int longT = (int) (Math.random() * (10001 - 576)) + 576;
+				int rbtn = (int) (Math.random() * (4 - 1)) + 1;
+				Random r = new Random();
+				
+				String MTU=""+mtu;
+				String longitud=""+longT;
+				String protocol = "";
+				String ipDestino, ipFinal;
+				
+				
+				fragmentar.setMtu(MTU);
+				fragmentar.setTamDatagrama(longitud);
+				
+				if (rbtn==1){
+					rbicmp.setSelected(true);
+					protocol=rbicmp.getText();
+					fragmentar.setProtocolo(protocol);
+				}
+				if (rbtn==2) {
+					rbtcp.setSelected(true);
+					protocol=rbtcp.getText();
+					fragmentar.setProtocolo(protocol);
+				}
+				if(rbtn==3){
+					rbudp.setSelected(true);
+					protocol=rbudp.getText();
+					fragmentar.setProtocolo(protocol);
+				}
+				
+				
+				//Generar Ip Aleatorias
+				ipDestino= r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256);
+				fragmentar.setIporigen(ipDestino);
+				ipFinal= r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256);
+				fragmentar.setIporigen(ipFinal);
+				
+				
+				//Llenamos los Textfield con los datos
+				tfmtu.setText(MTU);
+				tflongitud.setText(longitud);
+				tfipdestino.setText(ipDestino);
+				tfiporigen.setText(ipFinal);
+				
+				// Llenamos el constructor con los datos aleatorios para realizar las respectivas operaciones
+				operacion.datos(MTU, longitud, protocol, ipDestino, ipFinal);
+				
+				String msjHexa = "";
+				String hexadecimal[] = operacion.datagramaipHexadecimal;
+				for(int i=0;i<hexadecimal.length;i++) {
+					msjHexa += "Datagrama IP #" + (i+1) + ": \n";
+					msjHexa += hexadecimal[i] + "\n\n";
+				}
+				tahexadecimal.setText(msjHexa);
+				
+				String msjBin = "";
+				String binario[] =  ordenarDatagramaIPBinario(operacion.datagramaipBinario);
+				int j = 0, k = 0;
+				for(int i=0;i<operacion.datagramaipBinario.length;i++) {
+					msjBin += "Datagrama IP #" + (i+1) + ": \n";
+					while(j<5) {
+						msjBin += binario[k] + "\n";
+						j++;
+						k++;
+					}
+					j = 0;
+					msjBin += "\n";
+				}
+				tabinario.setText(msjBin);
+				
+				String msj = operacion.imprime();
+				taentendible.setText(msj);
+				
+				
 			}
+			
+			public String[] ordenarDatagramaIPBinario(String[] datagramaipBinario) {
+				// Organizar el datagrama IP Binario en 32 bits por linea
+				String arregloBinario[] = new String[5 * datagramaipBinario.length];
+				int i = 0, j = 0, inicial = 0, end = 39;
+				String aux = "";
+				while(i < datagramaipBinario.length) {
+					int k = 0;
+					while(k < 5) {
+						aux = datagramaipBinario[i].substring(inicial, end);
+						arregloBinario[j] = aux;
+						inicial += 40;
+						end += 40;
+						j++;
+						k++;
+					}
+					inicial = 0;
+					end = 39;
+					i++;
+				}
+				
+				return arregloBinario;
+			}
+			
+			
+			
 		});
 		btaleatorio.setFont(new Font("Arial", Font.BOLD, 11));
 		btaleatorio.setBounds(288, 234, 134, 23);
